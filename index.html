@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    
+    <title>Document</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+    
+    <link href="https://code.jquery.com/mobile/1.4.5/jquery.mobile.structure-1.4.5.css" rel="stylesheet" />
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.0/js/materialize.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.0/css/materialize.min.css" rel="stylesheet" />
+    
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <style>
+        pre { 
+            overflow-wrap: break-word;
+        }
+        #js-svg{
+            margin-right: 7.5%;
+            float: right;
+            width: 50%;
+            height: auto;
+        }
+        #instructions{
+            margin-left: 7.5%;
+            margin-top: 5%;
+           float: left;
+            width: 25%;
+            height: auto; 
+        }
+    </style>
+</head>
+
+<body>
+    <main class="pa4 dark-gray mw7 center sans-serif min-vh-100 flex flex-column flex-row-ns items-center">
+        <form class="measure-wide mr4-ns mb4 mb0-ns f5">
+            <fieldset id="instructions" class="ba b--transparent pa0 mh0">
+
+                <legend class="f5 b ph0 mh0 ttu tracked bb bw2 pv2 db w-100">
+                    Generador de poligonos
+                </legend>
+
+                <div class="mt5 mb4">
+                    <label class="f5 ttu tracked db b mb2" for="js-side-count">
+                        Numero de lados
+                    </label>
+                    <input class="b pa2 input-reset ba bw2 bg-white b--dark-gray w-100" type="number" id="js-side-count"
+                        value="4">
+                </div>
+
+                <div class="mv4">
+                    <label class="f5 ttu tracked db b mb2" for="js-radio">
+                        Radio de la figura
+                    </label>
+                    <input class="b pa2 input-reset ba bw2 bg-white b--dark-gray w-100" type="number" id="js-radio"
+                        value="125">
+                </div>
+                <div>
+                    <a class="waves-effect waves-light btn" id="js-generate"><i class="material-icons left">photo_size_select_small</i>Crear el poligono</a>
+                </div>
+            </fieldset>
+
+        </form>
+
+        <div class="flex-auto flex items-center justify-center w-100">
+            <div class="w-100">
+                <svg class="w-100 white debug-grid mb4 db" viewBox="0 0 800 800" stroke="#111" fill="none" stroke-width="4"
+                    id="js-svg">
+                    <polygon id="js-polygon" points="" />
+                </svg>
+            </div>
+        </div>
+        <script>
+            var NoLadosEl = document.getElementById('js-side-count');
+            var radioEl = document.getElementById('js-radio');
+            var generateEl = document.getElementById('js-generate');
+            var polygonEl = document.getElementById('js-polygon');
+            var svgEl = document.getElementById('js-svg');
+
+            function pts(NoLados, radio) {
+                var angulo = 360 / NoLados;
+                var vertexIndices = Array.from(Array(NoLados).keys());
+                var offsetDeg = 90 - ((180 - angulo) / 2);
+                var offset = (Math.PI * offsetDeg) / 180;
+
+                return vertexIndices.map((index) => {
+                    return {
+                        theta: offset + (Math.PI * (angulo * index)) / 180,
+                        r: radio,
+                    };
+                });
+            }
+            
+            function polygon([cx, cy], NoLados, radio) {
+                return pts(NoLados, radio)
+                    .map(({
+                        r,
+                        theta
+                    }) => [
+                        cx + r * Math.cos(theta),
+                        cy + r * Math.sin(theta),
+                    ])
+                    .join(' ');
+            }
+
+            function generatePolygon() {
+                var NoLados = +NoLadosEl.value;
+                var radio = +radioEl.value;
+                var s = 2 * radio + 50;
+
+                var viz = polygon([s / 2, s / 2], NoLados, radio);
+
+                svgEl.setAttribute('viewBox', `0 0 ${s} ${s}`);
+                polygonEl.setAttribute('points', viz);
+            }
+
+            generateEl.onclick = generatePolygon;
+            window.onload = generatePolygon;
+        </script>
+    </main>
+</body>
+
+</html>
