@@ -1,0 +1,79 @@
+<!DOCTYPE <!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Poligons</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!--Import Google Icon Font-->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!-- Compiled and minified CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <link rel="stylesheet" href="fondo.css">
+</head>
+
+<body>
+
+    <div class="center">
+        <div class="row">
+            <form class="col s12">
+                <div class="row">
+                    <div class="input-field col s6  white-text">
+                        <i class="material-icons prefix center-align white-text">filter_tilt_shift</i>
+                        <input id="Lados" type="text" class="white-text">
+                        <label for="Lados">Lados</label>
+                    </div>
+                    <div class="input-field col s6 white-text">
+                        <i class="material-icons prefix center-align white-text">photo_size_select_small</i>
+                        <input id="Pasos" type="tel" class="white-text">
+                        <label for="Pasos">Pasos</label>
+                    </div>
+
+                    <a class="waves-effect waves-light btn" id="Calcular">Calcular</a>
+                </div>
+        </div>
+        </form>
+
+        <div class="fondo">
+            <svg id="svgContainer" height="200" width="250">
+                <polygon id="poligono" points="" style="fill:#c2213cea; stroke:#000000; stroke-width:1;"></polygon>
+            </svg>
+
+            <!-- Compiled and minified JavaScript -->
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+            <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+                crossorigin="anonymous"></script>
+            <script>
+                $("#Calcular").click(function () {
+                    var lados = $("#Lados").val();
+                    var paso = $("#Pasos").val();
+
+                    var cx = 125;
+                    var cy = 100;
+                    var r = 75;
+
+                    function points(cx, cy, r, lados, paso) {
+                        var a = 360 / lados;
+                        var points = (cx + r) + "," + cy + " ";
+
+                        for (var i = 1; i <= lados; i++) {
+                            var aRad = ((Math.PI / 180) * (a * i)) * paso;
+                            Xp = cx + r * Math.cos(aRad);
+                            Yp = cy + r * Math.sin(aRad);
+                            points += Xp + "," + Yp + " ";
+                        }
+                        return points
+                    }
+
+                    var estrella = document.getElementById("poligono");
+                    estrella.setAttribute("points", points(cx, cy, r, lados, paso));
+                })
+            </script>
+        </div>
+    </div>
+</body>
+
+</html>
